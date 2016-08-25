@@ -24,8 +24,9 @@
 #pragma once
 
 #include <vector>
-#include "opencv2/core/core.hpp"
-#include "opencv2/highgui/highgui.hpp"
+
+#include "opencv2/opencv.hpp"
+
 
 using namespace std;
 using namespace cv;
@@ -71,9 +72,9 @@ namespace CvPlot
 		// margin size
 		int    border_size;
 
-		CvScalar backgroud_color;
-		CvScalar axis_color;
-		CvScalar text_color;
+		Scalar backgroud_color;
+		Scalar axis_color;
+		Scalar text_color;
 
 		// several curves
 		vector<Series> plots;
@@ -101,15 +102,15 @@ namespace CvPlot
 		string GetFigureName();
 		Series* Add(const Series &s);
 		void Clear();
-		void DrawLabels(IplImage *output, int posx, int posy);
+		void DrawLabels(Mat& output, int posx, int posy);
 
 		// show plot window
 		void Show();
 
 	private:
 		Figure();
-		void DrawAxis(IplImage *output);
-		void DrawPlots(IplImage *output);
+		void DrawAxis(Mat& output);
+		void DrawPlots(Mat& output);
 
 		// call before plot
 		void Initialize();
