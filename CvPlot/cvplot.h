@@ -1,3 +1,9 @@
+/*  Modified and extend matlab style plot by jamesKoo(kjamyoung@gmail.com)
+    1. Change a C style to a C++ style.
+	
+	* The solution file is VS2015.
+  
+-------The original source from https://code.google.com/p/cvplot/---------
 // Matlab style plot functions for OpenCV by Changbo (zoccob@gmail).
 // plot and label:
 //
@@ -20,6 +26,7 @@
 // 
 //
 //
+*/
 
 #pragma once
 
