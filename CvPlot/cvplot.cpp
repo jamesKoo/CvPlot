@@ -7,9 +7,9 @@ namespace CvPlot
 //  use anonymous namespace to hide global variables.
 namespace
 {
-	const CvScalar CV_BLACK = CV_RGB(0,0,0);
-	const CvScalar CV_WHITE = CV_RGB(255,255,255);
-	const CvScalar CV_GREY = CV_RGB(150,150,150);
+	const Scalar CV_BLACK = CV_RGB(0,0,0);
+	const Scalar CV_WHITE = CV_RGB(255,255,255);
+	const Scalar CV_GREY = CV_RGB(150,150,150);
 
 	PlotManager pm;
 }
@@ -63,7 +63,7 @@ void Series::SetColor(int R, int G, int B, bool auto_color)
 	SetColor(color, auto_color);
 }
 
-void Series::SetColor(CvScalar color, bool auto_color)
+void Series::SetColor(Scalar color, bool auto_color)
 {
 	this->color = color;
 	this->auto_color = auto_color;
@@ -158,10 +158,10 @@ void Figure::Initialize()
 	y_scale = (float)(figure_size.height - border_size * 2) / y_range;
 }
 
-CvScalar Figure::GetAutoColor()
+Scalar Figure::GetAutoColor()
 {
 	// 	change color for each curve.
-	CvScalar col;
+	Scalar col;
 
 	switch (color_index)
 	{

@@ -23,15 +23,12 @@
 
 #pragma once
 
-#if WIN32 
-//#define snprintf sprintf_s 
-#endif 
-
 #include <vector>
-#include "opencv/cv.h"
-#include "opencv/highgui.h"
+#include "opencv2/core/core.hpp"
+#include "opencv2/highgui/highgui.hpp"
 
 using namespace std;
+using namespace cv;
 
 namespace CvPlot
 {
@@ -48,7 +45,7 @@ namespace CvPlot
 
 		// allow automatic curve color
 		bool auto_color;
-		CvScalar color;
+		Scalar color;
 
 		Series(void);
 		Series(const Series& s);
@@ -59,7 +56,7 @@ namespace CvPlot
 
 		void SetData(int n, float *p);
 
-		void SetColor(CvScalar color, bool auto_color = true);
+		void SetColor(Scalar color, bool auto_color = true);
 		void SetColor(int R, int G, int B, bool auto_color = true);
 	};
 
@@ -69,7 +66,7 @@ namespace CvPlot
 	private:
 		// window name
 		string figure_name;
-		CvSize figure_size;
+		Size figure_size;
 
 		// margin size
 		int    border_size;
@@ -116,7 +113,7 @@ namespace CvPlot
 
 		// call before plot
 		void Initialize();
-		CvScalar GetAutoColor();
+		Scalar GetAutoColor();
 		
 	};
 
