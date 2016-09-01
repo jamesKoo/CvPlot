@@ -1,5 +1,5 @@
 /*  Modified and extend matlab style plot by jamesKoo(kjamyoung@gmail.com)
-    1. Change a C style to a C++ style.
+    1. Change the IplImage style to the Mat style.
 	
 	* The solution file is VS2015.
   

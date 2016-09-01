@@ -225,34 +225,34 @@ void Figure::DrawAxis(Mat& output)
 	//CvFont font;
 	//cvInitFont(&font,CV_FONT_HERSHEY_PLAIN,0.55,0.7, 0,1,CV_AA);
 
-	int chw = 6, chh = 10;
+	int chw = 6, chh = 12;
 	char text[16];
+	string text2;
 
 	// y max
 	if ((y_max - y_ref) > 0.05 * (y_max - y_min))
 	{
 		snprintf(text, sizeof(text)-1, "%.1f", y_max);
-		putText(output, text, Point(bs / 5, bs - chh / 2), CV_FONT_HERSHEY_PLAIN, 1.0, text_color);
+		putText(output, text, Point(bs / 5, bs - chh / 2), CV_FONT_HERSHEY_PLAIN, 0.9, text_color, 1, CV_AA);
 	}
 	// y min
 	if ((y_ref - y_min) > 0.05 * (y_max - y_min))
 	{
 		snprintf(text, sizeof(text)-1, "%.1f", y_min);
-		putText(output, text, cvPoint(bs / 5, h - bs + chh), CV_FONT_HERSHEY_PLAIN, 1.0, text_color);
+		putText(output, text, cvPoint(bs / 5, h - bs + chh), CV_FONT_HERSHEY_PLAIN, 0.9, text_color, 1, CV_AA);
 	}
 
 	// x axis
-	snprintf(text, sizeof(text)-1, "%.1f", y_ref);
-	putText(output, text, cvPoint(bs / 5, x_axis_pos + chh / 2), CV_FONT_HERSHEY_PLAIN, 1.0, text_color);
+ 	snprintf(text, sizeof(text)-1, "%.1f", y_ref);
+ 	putText(output, text, cvPoint(0, x_axis_pos + chh / 10), CV_FONT_HERSHEY_PLAIN, 0.9, text_color, 1, CV_AA);
 
 	// Write the scale of the x axis
 	snprintf(text, sizeof(text)-1, "%.0f", x_max );
-	putText(output, text, cvPoint(w - bs - strlen(text) * chw, x_axis_pos + chh), 
-		      CV_FONT_HERSHEY_PLAIN, 1.0, text_color);
+	putText(output, text, cvPoint(w - bs - strlen(text) * chw, x_axis_pos + chh), CV_FONT_HERSHEY_PLAIN, 0.9, text_color, 1, CV_AA);
 
 	// x min
 	snprintf(text, sizeof(text)-1, "%.0f", x_min );
-	putText(output, text, cvPoint(bs, x_axis_pos + chh), CV_FONT_HERSHEY_PLAIN, 1.0, text_color);
+	putText(output, text, cvPoint(bs, x_axis_pos + chh), CV_FONT_HERSHEY_PLAIN, 0.9, text_color, 1, CV_AA);
 
 
 }
@@ -295,19 +295,16 @@ void Figure::DrawLabels(Mat& output, int posx, int posy)
 	// character size
 	int chw = 6, chh = 8;
 
-	for (vector<Series>::iterator iter = plots.begin();
-		iter != plots.end();
-		iter++)
+	
+	for(auto& plot : plots)
 	{
-		string lbl = iter->label;
+		string lbl = plot.label;
 		// draw label if one is available
 		if (lbl.length() > 0)
 		{
-			line(output, Point(posx, posy - chh / 2), Point(posx + 15, posy - chh / 2),
-				   iter->color, 2, CV_AA);
+			line(output, Point(posx, posy - chh / 2), Point(posx + 15, posy - chh / 2), plot.color, 2, CV_AA);
 
-			putText(output, lbl.c_str(), Point(posx + 20, posy), CV_FONT_HERSHEY_PLAIN, 
-					1.0f, iter->color);
+			putText(output, lbl.c_str(), Point(posx + 20, posy), CV_FONT_HERSHEY_PLAIN, 1.0f, plot.color, 1, CV_AA);
 
 			posy += int(chh * 1.5);
 		}
@@ -326,7 +323,7 @@ void Figure::Show()
 
 	DrawPlots(output);
 
-	DrawLabels(output, figure_size.width - 100, 10);
+	DrawLabels(output, figure_size.width - 100, 15);
 
 	imshow(figure_name.c_str(), output);
 	waitKey(1);
