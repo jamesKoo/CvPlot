@@ -1,6 +1,7 @@
 // Matlab style plot functions for OpenCV by Changbo (zoccob@gmail).
 
 #include <iostream>
+#include <cmath>
 
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -9,6 +10,8 @@
 
 #define rowPtr(imagePtr, dataType, lineIndex) \
 	    (dataType *)(imagePtr->imageData + (lineIndex) * imagePtr->widthStep)
+
+
 
 
 int main(int argc, char* argv[])
@@ -47,6 +50,9 @@ int main(int argc, char* argv[])
 	//
 	
 	// specify a line to plot
+
+
+
 	int the_line = 100;
 	
 	int key = -1;

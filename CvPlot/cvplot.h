@@ -1,5 +1,6 @@
 /*  Modified and extend matlab style plot by jamesKoo(kjamyoung@gmail.com)
-    1. Change the IplImage style to the Mat style.
+    1. Changed the IplImage style to the Mat style.
+	2. Added guidelines refer to "Nice Numbers for Graph Labels" in Graphics Gems Book.
 	
 	* The solution file is VS2015.
   
@@ -99,6 +100,10 @@ namespace CvPlot
 
 		float x_scale;
 
+		// guidelines 
+		int tick_max;
+		float tick_spacing;
+
 		// automatically change color for each curve
 		int color_index;
 
@@ -118,10 +123,14 @@ namespace CvPlot
 		Figure();
 		void DrawAxis(Mat& output);
 		void DrawPlots(Mat& output);
+		void DrawGuidelines(Mat& output);
 
 		// call before plot
 		void Initialize();
 		Scalar GetAutoColor();
+
+		// refer to ""Nice Numbers for Graph Labels" in Graphics Gems Book
+		float FindNiceNum(float range, bool bRound);
 		
 	};
 

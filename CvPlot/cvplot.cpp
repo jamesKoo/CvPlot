@@ -82,6 +82,8 @@ Figure::Figure(const string name)
 	figure_size = cvSize(600, 600);
 	border_size = 30;
 
+	tick_max = 10;
+
 	plots.reserve(10);
 }
 
@@ -122,12 +124,10 @@ void Figure::Initialize()
 	x_min = 0;
 
 	// find maximum/minimum of axes
-	for (vector<Series>::iterator iter = plots.begin();
-		iter != plots.end();
-		iter++)
+	for (auto& plot : plots)
 	{
-		float *p = iter->data;
-		for (unsigned int i=0; i < iter->count; i++)
+		float *p = plot.data;
+		for (unsigned int i=0; i < plot.count; i++)
 		{
 			float v = p[i];
 			if (v < y_min)
@@ -136,9 +136,15 @@ void Figure::Initialize()
 				y_max = v;
 		}
 
-		if (x_max < iter->count)
-			x_max = (float)iter->count;
+		if (x_max < plot.count)
+			x_max = (float)plot.count;
 	}
+	
+	// find nice range and tick spacing
+	float niceRange = FindNiceNum(y_max - y_min, false);
+	tick_spacing = FindNiceNum(niceRange / (tick_max - 1), true);
+	y_min = floor(y_min / tick_spacing) * tick_spacing;
+	y_max = ceil(y_max / tick_spacing) * tick_spacing;
 
 	// calculate zoom scale
 	// set to 2 if y range is too small
@@ -156,6 +162,40 @@ void Figure::Initialize()
 		x_scale = (float)(figure_size.width - border_size * 2) / (x_max - x_min);
 
 	y_scale = (float)(figure_size.height - border_size * 2) / y_range;
+}
+
+float Figure::FindNiceNum(float range, bool bRound)
+{
+	float exponent;	 
+	float fraction;	 
+	float niceFraction;
+
+	exponent = floor(log10(range));
+	fraction = range / pow(10, exponent);
+
+	if (bRound) {
+		if (fraction < 1.5)
+			niceFraction = 1;
+		else if (fraction < 3)
+			niceFraction = 2;
+		else if (fraction < 7)
+			niceFraction = 5;
+		else
+			niceFraction = 10;
+	}
+	else {
+		if (fraction <= 1)
+			niceFraction = 1;
+		else if (fraction <= 2)
+			niceFraction = 2;
+		else if (fraction <= 5)
+			niceFraction = 5;
+		else
+			niceFraction = 10;
+	}
+
+	return niceFraction * pow(10, exponent);
+	
 }
 
 Scalar Figure::GetAutoColor()
@@ -290,6 +330,31 @@ void Figure::DrawPlots(Mat& output)
 
 }
 
+void Figure::DrawGuidelines(Mat& output)
+{
+	int bs = border_size;
+	int h = figure_size.height;
+	int w = figure_size.width;
+
+	// size of graph
+	int gh = h - bs * 2;
+	int gw = w - bs * 2;
+
+	// draw the horizontal and vertical axis
+	// let x, y axies cross at zero if possible.
+	float y_ref = y_min;
+	if ((y_max > 0) && (y_min <= 0))
+		y_ref = 0;
+
+	int x_axis_pos = h - bs - cvRound((y_ref - y_min) * y_scale);
+
+	for (float tick_idx = 1; tick_idx < tick_max; tick_idx++)
+	{
+		int tick_pos = x_axis_pos - cvRound(tick_spacing * tick_idx * y_scale);
+		line(output, Point(bs, tick_pos), Point(w - bs, tick_pos), axis_color);
+	}
+}
+
 void Figure::DrawLabels(Mat& output, int posx, int posy)
 {
 	// character size
@@ -320,6 +385,7 @@ void Figure::Show()
 	Mat output(figure_size, CV_8UC3, backgroud_color);
 	
 	DrawAxis(output);
+	DrawGuidelines(output);
 
 	DrawPlots(output);
 
